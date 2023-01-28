@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { userservice } from './userservice/userservice.service';
-import { UsercontrollerController } from './usercontroller/usercontroller.controller';
+import { userservice } from '../service/userservice.service';
+import { UsercontrollerController } from '../controller/usercontroller.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User,UserSchema } from 'src/models/user.interface';
 import { NestjsFormDataModule } from 'nestjs-form-data/dist/nestjs-form-data.module';
