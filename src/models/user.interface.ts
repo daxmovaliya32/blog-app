@@ -9,7 +9,7 @@ export class User {
   @IsNotEmpty()
   name: string;
 
-  @Prop({unique:true})
+  @Prop()
   @IsNotEmpty()
   username: string;
 

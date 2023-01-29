@@ -8,17 +8,6 @@ export class userservice {
     constructor(
         @InjectModel('User') private readonly userModel:Model<UserDocument>
     ){}
-    // for usercreation
-    async creatuser(user:User):Promise<User>
-    {
-        try {
-            const newUser = new this.userModel(user);
-            return newUser.save();
-        } 
-        catch (error) {
-        console.log(error);
-        }
-    }
 
     // for search user by id
     async finduser(id:String):Promise<User>
@@ -41,4 +30,5 @@ export class userservice {
         console.log(error);
         }
     }
+    
 }
