@@ -1,13 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller,UseGuards } from '@nestjs/common';
 import { Body, Post } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
-import { authUser } from 'src/models/auth.dto';
 import { User } from 'src/models/user.interface';
+import { authUser } from 'src/user/user.dto';
 import { AuthService } from './auth.service';
 
-@Controller('user')
+@Controller('auth')
 export class authController {
     constructor(private readonly Authservice:AuthService){}
+
     @Post('signin')
     @FormDataRequest()
     async loginuser(@Body() userdto:authUser) {

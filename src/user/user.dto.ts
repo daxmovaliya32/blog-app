@@ -11,3 +11,19 @@ export class authUser {
     password: string;
   
   }
+
+export class resetpassword {
+  
+    @IsNotEmpty()
+    oldpassword: string;
+  
+    @IsNotEmpty()
+    newpassword:string;
+}
+
+export class updateusername {
+  
+    @IsNotEmpty()
+    name: string;
+  
+}

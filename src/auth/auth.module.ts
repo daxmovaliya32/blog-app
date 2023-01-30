@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports:[ConfigModule.forRoot({isGlobal:true}),NestjsFormDataModule,JwtModule.register({
-    secret:process.env.jwtsecret,
+       secret:process.env.jwtsecret,
   }) ,PassportModule,MongooseModule.forFeature([{name:'User',schema:UserSchema}])],
   providers: [AuthService],
   controllers:[authController]

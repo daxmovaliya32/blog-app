@@ -28,10 +28,10 @@ export class AuthService {
             {
                 return {message:"password is not correct"}
             }
-            
+            check.password='';
+            check.email='';
             const token = this.jwtService.sign(JSON.stringify(check))
-            
-            return {token,check};
+            return {access_token:token};
         
         } catch (error) {
             console.log(error);
@@ -60,6 +60,7 @@ export class AuthService {
                username:user.username,
                password:pass          
            });
+          
            return newUser.save();
    }
    
