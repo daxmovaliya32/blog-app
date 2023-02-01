@@ -1,4 +1,12 @@
-import { IsEmail, IsNotEmpty, MinLength } from "class-validator";
+import { Prop } from "@nestjs/mongoose";
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from "class-validator";
+
+enum role {
+    ADMIN='admin',
+    USER='user',
+    EDITOR='editor',
+    CHIEFEDITOR='chiefeditor'
+ }
 
 export class authUser {
   
@@ -26,4 +34,10 @@ export class updateusername {
     @IsNotEmpty()
     name: string;
   
+}
+
+export class updaterole {
+  
+    @IsEnum(role)
+    role:role;
 }

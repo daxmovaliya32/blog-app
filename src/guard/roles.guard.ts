@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext} from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common/exceptions/unauthorized.exception';
 import { JwtService } from '@nestjs/jwt';
+import { response } from 'express';
 
 
 @Injectable()
@@ -8,25 +9,26 @@ export class RolesGuardadmin implements CanActivate {
   constructor(private readonly jwtService:JwtService) {}
 
   canActivate(context: ExecutionContext):boolean{
-    
+   
     try {
       const request = context.switchToHttp().getRequest();
-        const token = request.headers.token;
-        if(!token)
-        {
-            throw new UnauthorizedException('token is not provided');
-        } 
+      const token = request.headers.token;
+      if(!token)
+      {
+          throw new UnauthorizedException('token is not provided');
+      } 
         const user = this.jwtService.verify(token)
         request.user=user
-
-        if(user.isAdmin)
+        console.log(user.role);
+        
+        if(user.role=="admin")
         {
-            return true;
+          return true;
         }else{
-          throw new UnauthorizedException('user can not perform this action');
+          throw new UnauthorizedException('only admin can perform this action');
         }
     } catch (error) {
-        throw new UnauthorizedException('invalid or expire token');  
+        throw new UnauthorizedException(error.response);  
     }
   }
 }
@@ -36,22 +38,21 @@ export class RolesGuarduser implements CanActivate {
   constructor(private readonly jwtService:JwtService) {}
 
   canActivate(context: ExecutionContext):boolean{ 
-    try {
-        const request = context.switchToHttp().getRequest();
-        const token = request.headers.token;
-        
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers.token;
         if(!token)
         {
             throw new UnauthorizedException('token is not provided');
         }
-        const user = this.jwtService.verify(token)        
-        if(!user.isAdmin)
+    try {
+        const user = this.jwtService.verify(token) 
+        if(user.role =="user")
         {
           request.user=user
             return true;
         }
     } catch (error) {
-        throw new UnauthorizedException('invalid or expire token');  
+        throw new UnauthorizedException(error.response);  
     }
   }
 }
