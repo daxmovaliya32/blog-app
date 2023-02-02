@@ -9,7 +9,6 @@ export class RolesGuardadmin implements CanActivate {
   constructor(private readonly jwtService:JwtService) {}
 
   canActivate(context: ExecutionContext):boolean{
-   
     try {
       const request = context.switchToHttp().getRequest();
       const token = request.headers.token;
@@ -20,7 +19,6 @@ export class RolesGuardadmin implements CanActivate {
         const user = this.jwtService.verify(token)
         request.user=user
         console.log(user.role);
-        
         if(user.role=="admin")
         {
           return true;

@@ -7,9 +7,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/models/user.interface';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ConfigModule } from '@nestjs/config';
+import { CloudinaryModule } from 'src/helper/cloudinary/cloudinary.module';
 
 @Module({
-  imports:[ConfigModule.forRoot({isGlobal:true}),NestjsFormDataModule,JwtModule.register({
+  imports:[CloudinaryModule,ConfigModule.forRoot({isGlobal:true}),NestjsFormDataModule,JwtModule.register({
        secret:process.env.jwtsecret,
   }) ,PassportModule,MongooseModule.forFeature([{name:'User',schema:UserSchema}])],
   providers: [AuthService],

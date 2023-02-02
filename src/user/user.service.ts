@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {User, UserDocument, UserSchema} from '../models/user.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, PaginateModel } from 'mongoose';
 import { resetpassword, updaterole, updateusername } from './user.dto';
 import { encryptpassword, verifypassword } from 'src/helper/password.helper';
+import { CloudinaryService } from 'src/helper/cloudinary/cloudinary.service';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const myCustomLabels = {
@@ -17,18 +18,13 @@ const myCustomLabels = {
     pagingCounter: 'slNo',
     meta: 'paginator',
   };
-  
-  const options = {
-    page: 1,
-    limit:4,
-    customLabels: myCustomLabels,
-  };
 
 @Injectable({})
 export class userservice {
     constructor(
         @InjectModel(User.name) private readonly userModel:Model<UserDocument>,
-        @InjectModel(User.name) private readonly usermodelpag:PaginateModel<UserDocument>
+        @InjectModel(User.name) private readonly usermodelpag:PaginateModel<UserDocument>,
+        private cloudinary:CloudinaryService
     ){}
 
     // for search user by id
@@ -43,10 +39,15 @@ export class userservice {
     }
 
     // list all users
-    async findall():Promise<any>
-    {     
-       const user = await this.usermodelpag.paginate(UserSchema.plugin(mongoosePaginate),options)
-       return user;
+    async findall(page:number,limit:number):Promise<any>
+    {       
+     const options = {
+        page: Number(page),
+        limit:Number(limit),
+        customLabels: myCustomLabels,
+      };
+      UserSchema.plugin(mongoosePaginate)
+       return this.usermodelpag.paginate({},options)
     }
     
     // for update user 
@@ -102,4 +103,14 @@ export class userservice {
         console.log(error);
         }
     }
+
+    async updateprofile(req:any) {
+        const res = await this.cloudinary.uploadImage(req.file).catch((error) => {
+            console.log(error);
+          throw new BadRequestException(error.message);    
+        });
+        return await this.userModel.findByIdAndUpdate({_id:req.user._id},{image:res.secure_url},{new:true});
+      }
+
+
 }

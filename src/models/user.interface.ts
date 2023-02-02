@@ -28,6 +28,9 @@ export class User {
   @Prop({default:"user"})
   role:String;
 
+  @Prop({type:String})
+  @IsNotEmpty()
+  image:any;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
