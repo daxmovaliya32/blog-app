@@ -1,1 +1,1 @@
-export const CLOUDINARY = process.env.token;
+export const CLOUDINARY = 'Cloudinary';

@@ -19,19 +19,19 @@ const myCustomLabels = {
     meta: 'paginator',
   };
 
-@Injectable({})
+@Injectable()
 export class userservice {
     constructor(
         @InjectModel(User.name) private readonly userModel:Model<UserDocument>,
         @InjectModel(User.name) private readonly usermodelpag:PaginateModel<UserDocument>,
-        private cloudinary:CloudinaryService
+        private readonly cloudinary:CloudinaryService
     ){}
 
     // for search user by id
     async finduser(id:String):Promise<User>
     {
         try {
-            return this.userModel.findOne({_id:id});
+            return (await this.userModel.findOne({_id:id}).populate("blogentries"));
         } 
         catch (error) {
         console.log(error);
@@ -94,9 +94,6 @@ export class userservice {
     async updaterole(id:string,role:updaterole)
     {
         try {
-            console.log(role);
-            
-            const userdata = await this.userModel.findOne({_id:id});
             return this.userModel.findByIdAndUpdate({_id:id},{role:role.role},{new:true});
         } 
         catch (error) {

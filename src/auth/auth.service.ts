@@ -5,14 +5,13 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/models/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { CloudinaryService } from 'src/helper/cloudinary/cloudinary.service';
-import { response } from 'express';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectModel('User') private readonly userModel:Model<UserDocument>,
         private readonly jwtService:JwtService,
-        private cloudinary: CloudinaryService
+        private readonly cloudinary: CloudinaryService
     ){}
 
 

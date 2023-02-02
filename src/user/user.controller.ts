@@ -1,4 +1,4 @@
-import { Controller, Delete, Patch,Query,UploadedFile,UploadedFiles,UseGuards, UseInterceptors} from '@nestjs/common';
+import { Controller, Delete, Patch,Query,UploadedFile,UseGuards, UseInterceptors} from '@nestjs/common';
 import { Body,Get,Param,Request } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FormDataRequest } from 'nestjs-form-data';
@@ -19,8 +19,6 @@ export class UsercontrollerController {
     @UseGuards(RolesGuardadmin)
     @Get()
     async findalluser(@Query('limit') limit:number,@Query('page') page:number){
-        console.log(page);
-        
         return this.Userservice.findall(page,limit);
     }
 
