@@ -1,8 +1,8 @@
 import { Controller, Delete, Patch,Query,UploadedFile,UseGuards, UseInterceptors} from '@nestjs/common';
 import { Body,Get,Param,Request } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { FormDataRequest } from 'nestjs-form-data';
-import { RolesGuardadmin, RolesGuarduser } from 'src/guard/roles.guard';
+import { RolesGuardadmin, RolesGuardforadminanduser, RolesGuarduser } from 'src/guard/roles.guard';
 import { resetpassword, updaterole, updateusername } from './user.dto';
 import { userservice } from './user.service';
 
@@ -10,13 +10,13 @@ import { userservice } from './user.service';
 export class UsercontrollerController {
     constructor(private readonly Userservice:userservice){}
     
-    @UseGuards(RolesGuarduser)
+    @UseGuards(RolesGuardforadminanduser)
     @Get(':id')
-    async findUserbyid(@Param('id') id:String) {
-        return this.Userservice.finduser(id);
+    async findUserbyid(@Param('id') id:string) {
+        return this.Userservice.finduser(id)
     }
     
-    @UseGuards(RolesGuardadmin)
+    @UseGuards(RolesGuardforadminanduser)
     @Get()
     async findalluser(@Query('limit') limit:number,@Query('page') page:number){
         return this.Userservice.findall(page,limit);
@@ -54,8 +54,6 @@ export class UsercontrollerController {
     @Patch('updateprofile')
     @UseInterceptors(FileInterceptor('file'))
     async changeuserprofile(@Request() req:RolesGuarduser,@UploadedFile() file: Express.Multer.File) {
-        console.log(req);
-        
         return this.Userservice.updateprofile(req);
     }
 }

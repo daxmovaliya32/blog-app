@@ -54,3 +54,27 @@ export class RolesGuarduser implements CanActivate {
     }
   }
 }
+
+@Injectable()
+export class RolesGuardforadminanduser implements CanActivate {
+  constructor(private readonly jwtService:JwtService) {}
+
+  canActivate(context: ExecutionContext):boolean{ 
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers.token;
+        if(!token)
+        {
+            throw new UnauthorizedException('token is not provided');
+        }
+    try {
+        const user = this.jwtService.verify(token) 
+        if(user.role =="user" || user.role =="admin")
+        {
+          request.user=user
+            return true;
+        }
+    } catch (error) {
+        throw new UnauthorizedException(error.response);  
+    }
+  }
+}

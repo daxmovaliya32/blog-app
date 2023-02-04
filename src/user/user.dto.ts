@@ -1,5 +1,5 @@
 import { Prop } from "@nestjs/mongoose";
-import { IsEmail, IsEnum, IsNotEmpty, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, Matches, MinLength } from "class-validator";
 
 enum role {
     ADMIN='admin',
@@ -26,6 +26,7 @@ export class resetpassword {
     oldpassword: string;
   
     @IsNotEmpty()
+    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {message: 'password too weak'})
     newpassword:string;
 }
 

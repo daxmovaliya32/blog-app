@@ -14,7 +14,7 @@ export class AuthService {
         private readonly cloudinary: CloudinaryService
     ){}
 
-
+    //for login user
     async signinuser(email:string,password:string)
     {
         try{      
@@ -41,7 +41,7 @@ export class AuthService {
         }
    }
 
-
+   //for register user
    async signupuser(user:User)
    {  
        const emailexist =await this.userModel.findOne({email:user.email});
@@ -65,7 +65,7 @@ export class AuthService {
                email:user.email,
                username:user.username,
                password:pass,
-               image:response.secure_url         
+               image:response.secure_url,         
            });
           
            return newUser.save();

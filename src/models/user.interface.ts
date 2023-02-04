@@ -29,7 +29,7 @@ export class User {
   @Prop({default:"user"})
   role:String;
 
-  @Prop({type:mongoose.Schema.Types.ObjectId,ref:'Blog'})
+  @Prop([{type:mongoose.Schema.Types.ObjectId,ref:'Blog'}])
   blogentries:Blog[];
 
   @Prop({type:String})

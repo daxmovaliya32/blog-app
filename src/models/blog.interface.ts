@@ -33,8 +33,9 @@ export class Blog {
   @Prop({default:null})
   publishdate:Date;
 
-  @Prop({default:null})
-  ispublish:boolean;
+  @Prop()
+  @IsNotEmpty()
+  ispublish:Boolean;
 
   @Prop({type:mongoose.Schema.Types.ObjectId,ref:'User'})
   author:User;

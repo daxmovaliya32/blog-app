@@ -8,9 +8,10 @@ import { jwtstrategy } from 'src/strategy/jwt.strategy';
 import { RolesGuardadmin, RolesGuarduser } from 'src/guard/roles.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { CloudinaryModule } from 'src/helper/cloudinary/cloudinary.module';
+import { BlogSchema } from 'src/models/blog.interface';
 
 @Module({
-  imports: [ CloudinaryModule,NestjsFormDataModule,MongooseModule.forFeature([{name:'User',schema:UserSchema}]),JwtModule.register({
+  imports: [ CloudinaryModule,NestjsFormDataModule,MongooseModule.forFeature([{name:'User',schema:UserSchema}]),MongooseModule.forFeature([{name:'Blog',schema:BlogSchema}]),JwtModule.register({
     secret:process.env.jwtsecret,
 })],
   providers: [userservice,jwtstrategy,RolesGuardadmin,RolesGuarduser],

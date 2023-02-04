@@ -5,6 +5,7 @@ import { Model, PaginateModel } from 'mongoose';
 import { resetpassword, updaterole, updateusername } from './user.dto';
 import { encryptpassword, verifypassword } from 'src/helper/password.helper';
 import { CloudinaryService } from 'src/helper/cloudinary/cloudinary.service';
+import { Blog, BlogDocument } from 'src/models/blog.interface';
 const mongoosePaginate = require('mongoose-paginate-v2');
 
 const myCustomLabels = {
@@ -23,15 +24,16 @@ const myCustomLabels = {
 export class userservice {
     constructor(
         @InjectModel(User.name) private readonly userModel:Model<UserDocument>,
+        @InjectModel(Blog.name) private readonly blogModel:Model<BlogDocument>,
         @InjectModel(User.name) private readonly usermodelpag:PaginateModel<UserDocument>,
         private readonly cloudinary:CloudinaryService
     ){}
 
     // for search user by id
-    async finduser(id:String):Promise<User>
+    async finduser(id:string):Promise<Blog[]>
     {
         try {
-            return (await this.userModel.findOne({_id:id}).populate("blogentries"));
+            return await this.userModel.findById({_id:id}).populate("blogentries")
         } 
         catch (error) {
         console.log(error);
