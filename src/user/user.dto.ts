@@ -1,4 +1,3 @@
-import { Prop } from "@nestjs/mongoose";
 import { IsEmail, IsEnum, IsNotEmpty, Matches, MinLength } from "class-validator";
 
 enum role {
@@ -41,4 +40,15 @@ export class updaterole {
   
     @IsEnum(role)
     role:role;
+}
+
+export class verifydto {
+  
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
+
+    @IsNotEmpty()
+    otp:number
+  
 }

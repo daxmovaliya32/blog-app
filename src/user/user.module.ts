@@ -17,4 +17,4 @@ import { BlogSchema } from 'src/models/blog.interface';
   providers: [userservice,jwtstrategy,RolesGuardadmin,RolesGuarduser],
   controllers: [UsercontrollerController]
 })
-export class UserModule {}
+export class UserModule {} 

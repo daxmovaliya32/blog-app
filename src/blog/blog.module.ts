@@ -10,10 +10,14 @@ import { Blogservice } from './blog.service';
 import { RolesGuarduser } from 'src/guard/roles.guard';
 import { jwtstrategy } from 'src/strategy/jwt.strategy';
 import { BlogSchema } from 'src/models/blog.interface';
+import { MailerModule } from '@nestjs-modules/mailer';
 // import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports:[CloudinaryModule,ConfigModule.forRoot({isGlobal:true}),MongooseModule.forFeature([{name:'User',schema:UserSchema}]),MongooseModule.forFeature([{name:'Blog',schema:BlogSchema}]),NestjsFormDataModule,JwtModule.register({
+  imports:[CloudinaryModule,ConfigModule.forRoot({isGlobal:true}),
+    MongooseModule.forFeature([{name:'User',schema:UserSchema}]),
+    MongooseModule.forFeature([{name:'Blog',schema:BlogSchema}]),
+    NestjsFormDataModule,JwtModule.register({
        secret:process.env.jwtsecret,
   })],
   providers: [Blogservice,jwtstrategy,RolesGuarduser],

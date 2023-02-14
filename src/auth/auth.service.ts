@@ -5,6 +5,13 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/models/user.interface';
 import { JwtService } from '@nestjs/jwt';
 import { CloudinaryService } from 'src/helper/cloudinary/cloudinary.service';
+const otpGenerator = require('otp-generator')
+import * as dotenv from 'dotenv';
+import { sendMail } from './sendmail';
+import { verifydto } from 'src/user/user.dto';
+import { emailforsendotp, forgotpassword, verifingotp } from './auth.dto';
+
+dotenv.config(); 
 
 @Injectable()
 export class AuthService {
@@ -44,7 +51,7 @@ export class AuthService {
    //for register user
    async signupuser(user:User)
    {  
-       const emailexist =await this.userModel.findOne({email:user.email});
+       const emailexist =await this.userModel.findOne({email:user.email,isemailverified:true});
        const usernameexist =await this.userModel.findOne({username:user.username});
        if(emailexist)
        {
@@ -54,9 +61,10 @@ export class AuthService {
        {
           return{ message: "this username is already exist"}    
        }
+        const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets: false});
+       sendMail(user.email,otp);
        const response=await this.cloudinary.uploadImage(user.image).catch((error) => {
-        console.log(error);
-      throw new BadRequestException(error.message);
+       throw new BadRequestException(error.message);
     });
     
        const pass = await encryptpassword(user.password)
@@ -65,10 +73,65 @@ export class AuthService {
                email:user.email,
                username:user.username,
                password:pass,
-               image:response.secure_url,         
+               image:response.secure_url,   
+               otp:otp      
            });
-          
            return newUser.save();
    }
+
+   async verify(data:verifydto)
+   {
+       const finduser = await this.userModel.findOne({email:data.email,isemailverified:false});
+       if(finduser.otp != data.otp)
+       {
+        return {message:"otp does not match please enter valid otp"}
+       }
+       await this.userModel.findByIdAndUpdate({_id:finduser._id},{isemailverified:true},{new:true});
+
+       return {message:"your email is verifie you can login now"}
+   }
+
+   async findemailandsaveotp(userdto:emailforsendotp)
+   {
+    const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets: false});
+       sendMail(userdto.email,otp);
+       const user = await this.userModel.findOne({email:userdto.email,isemailverified:true,isDeleted:false})
+       return await this.userModel.findByIdAndUpdate({_id:user._id},{otp:otp},{new:true});
+
+   }
+
+   async otpverificationforforgotpassword(userdto:verifingotp)
+   {
+       const finduser = await this.userModel.findOne({email:userdto.email,isemailverified:true,isDeleted:false});
+       if(finduser.otp != userdto.otp)
+       {
+        return {message:"otp does not match please enter valid otp"}
+       }
+       return {message:"successs...."}
+   }
+
+   async changepassword(userdto:forgotpassword)
+   {
+       try {
+           const userdata = await this.userModel.findOne({email:userdto.email,isDeleted:false,isemailverified:true});
+           if(!userdata)
+           {
+               return {message:"user not found..."}
+           }
+           if(userdto.confirmnewpassword != userdto.newpassword)
+           {
+               return {message:"new password and confirm new password is not same please enter same password"}
+           }
+           const bcryptpass = await encryptpassword(userdto.newpassword);
+          
+           return this.userModel.findByIdAndUpdate({_id:userdata._id},{password:bcryptpass},{new:true});
+       } 
+       catch (error) {
+        return {message:error.message}
+       }
+   }
+
+
+
    
 }

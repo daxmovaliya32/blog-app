@@ -8,6 +8,8 @@ import { UserSchema } from 'src/models/user.interface';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ConfigModule } from '@nestjs/config';
 import { CloudinaryModule } from 'src/helper/cloudinary/cloudinary.module';
+// import { MailerModule } from '@nestjs-modules/mailer/dist/mailer.module';
+// import { SendgridService } from 'src/auth/sendmail.helper';
 
 @Module({
   imports:[CloudinaryModule,ConfigModule.forRoot({isGlobal:true}),NestjsFormDataModule,JwtModule.register({

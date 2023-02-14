@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards} from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { RolesGuardadmin, RolesGuardforadminanduser, RolesGuarduser } from 'src/guard/roles.guard';
 import { Blog } from 'src/models/blog.interface';
 import { Blogservice } from './blog.service';
+import { blogfilterdto } from './blogfilter.dto';
 
 @Controller('user/blog')
 export class BlogController {
@@ -25,8 +26,8 @@ export class BlogController {
 
     @Get('findallblog')
     @UseGuards(RolesGuardforadminanduser)
-    async findallblog() {
-        return this.blogservice.findblogs();
+    async findallblog(@Query() query:blogfilterdto) {
+        return this.blogservice.findblogs(query);
     }
 
     @Get('finduserblog/:id')

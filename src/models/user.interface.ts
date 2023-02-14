@@ -13,7 +13,7 @@ export class User {
 
   @Prop()
   @IsNotEmpty()
-  username: string;
+  username: String;
 
   @Prop()
   @IsNotEmpty()
@@ -35,6 +35,16 @@ export class User {
   @Prop({type:String})
   @IsNotEmpty()
   image:any;
+
+  @Prop({default:false})
+  isemailverified:boolean;
+
+  @Prop({default:false})
+  isDeleted:boolean;
+ 
+  @Prop()
+  otp:number
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

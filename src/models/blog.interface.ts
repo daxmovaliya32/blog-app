@@ -9,7 +9,7 @@ export type BlogDocument = Blog & Document;
 export class Blog {
   @Prop()
   @IsNotEmpty()
-  title: string;
+  title: String;
 
   @Prop()
   @IsNotEmpty()

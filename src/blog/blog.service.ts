@@ -4,6 +4,19 @@ import { Model, PaginateModel } from 'mongoose';
 import { CloudinaryService } from 'src/helper/cloudinary/cloudinary.service';
 import { Blog, BlogDocument } from 'src/models/blog.interface';
 import { User, UserDocument } from 'src/models/user.interface';
+import { blogfilterdto } from './blogfilter.dto';
+
+const myCustomLabels = {
+  totalDocs: 'itemCount',
+  docs: 'itemsList',
+  limit: 'perPage',
+  page: 'currentPage',
+  nextPage: 'next',
+  prevPage: 'prev',
+  totalPages: 'pageCount',
+  pagingCounter: 'slNo',
+  meta: 'paginator',
+};
 
 @Injectable()
 export class Blogservice {
@@ -52,9 +65,23 @@ export class Blogservice {
     }
 
     //list of all blogs which is published by user
-    async findblogs()
+    async findblogs(query:blogfilterdto):Promise<any>
     {
-      return await this.blogModel.find({ispublish:true}).populate("author","-password -blogentries -role");
+      let findblog;
+      if(query.blogname != null)
+      {
+        findblog = this.blogModel.find({isDeleted:false,
+          title:{$regex:query.blogname,$options:"i"}
+        }).populate("author")
+      }else{
+        findblog = this.blogModel.find({isDeleted:false})
+      }
+      const options = {
+        page: Number(query.page) || 1,
+        limit:Number(query.limit) || 10,
+        customLabels: myCustomLabels,
+      };
+      return await this.blogmodelpag.paginate(findblog,options)
     }
 
     //for finding particular user's blog

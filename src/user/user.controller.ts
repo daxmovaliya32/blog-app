@@ -1,8 +1,10 @@
 import { Controller, Delete, Patch,Query,UploadedFile,UseGuards, UseInterceptors} from '@nestjs/common';
 import { Body,Get,Param,Request } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { query } from 'express';
 import { FormDataRequest } from 'nestjs-form-data';
 import { RolesGuardadmin, RolesGuardforadminanduser, RolesGuarduser } from 'src/guard/roles.guard';
+import { filterdto } from './filter.dto';
 import { resetpassword, updaterole, updateusername } from './user.dto';
 import { userservice } from './user.service';
 
@@ -18,8 +20,8 @@ export class UsercontrollerController {
     
     @UseGuards(RolesGuardforadminanduser)
     @Get()
-    async findalluser(@Query('limit') limit:number,@Query('page') page:number){
-        return this.Userservice.findall(page,limit);
+    async findalluser(@Query() query:filterdto){
+        return this.Userservice.findall(query);
     }
 
     @UseGuards(RolesGuarduser)
